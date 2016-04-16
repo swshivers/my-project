@@ -1,0 +1,80 @@
+---
+title: "Gapminder analysis with dplyr"
+author: "Sarah Shivers"
+date: "April 16, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load dyplr
+
+
+
+```{r}
+# install.packages("dplyr") #do this only once
+library(dplyr) # do this every time I restart R and need dplyr
+
+
+```
+
+## Load gapminder data
+
+
+
+```{r}
+
+#install.packages("gapminder")
+library(gapminder) 
+str(gapminder)
+
+```
+
+## Exploration with gapminder
+```{r}
+
+# simple filter example
+filter(gapminder, lifeExp < 29)
+# compare with dplyr
+gapminder[gapminder$lifeExp <29]
+
+# filter
+filter(gapminder, country == "Rwanda")
+# compare with dplyr
+subset(gapminder, country == "Rwanda")
+
+a <- filter(gapminder, country %in% c("Rwanda", "Afghanistan"))
+
+# the pipe operator! %>% 
+# command shift m to insert pipe operator %>% 
+# from magrittr package
+gapminder %>% head # same as head(gapminder) 
+gapminder %>% head(3) # same as head(gapminder, 3)
+
+## subset with select()
+select(gapminder,year,lifeExp) 
+gapminder %>% select(year, lifeExp) # better... 
+
+gapminder %>% 
+  select(year, lifeExp) %>% 
+  head(4)
+
+# mean gdp of Cambodia
+# mutate adds a new column
+gapminder %>% 
+  filter(continent == "Asia") %>% 
+  select(country, year, pop, gdpPercap) %>% # or you could write select(-continent, -lifeExp) to not select certain columns
+  mutate(gdp = pop * gdpPercap) %>% 
+  group_by(country) %>% 
+  summarise(mean_gdp = mean(gdp)) %>% 
+  ungroup() # good practice to ungroup after you group
+
+# first part same as gapminder[gapminder$country == "Cambodia", c("country","year","pop","gdpPercap")]
+
+
+
+
+  
+```

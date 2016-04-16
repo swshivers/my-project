@@ -1,0 +1,93 @@
+---
+title: "viz"
+author: "Sarah Shivers"
+date: "April 16, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Scatterplot
+```{r load, results='hide', message=FALSE, warning=FALSE} 
+# echo and eval are true by default
+library(dplyr)
+library(ggplot2) #install.packages("ggplot2")
+library(gapminder)
+
+# preview data
+gapminder
+
+# get range of available data
+summary(gapminder)
+
+```
+
+```{r}
+# setup dataframe
+g = gapminder %>%
+  filter(year==2007) %>%   # most recent year 
+  mutate(pop_m = pop/1e6)  # population, millions
+
+# plot scatterplot of most recent year 
+s = ggplot(g, aes(x=gdpPercap, y=lifeExp)) +
+  geom_point()
+s
+
+# s + geom_smooth()
+
+s = s + 
+  aes(size=pop_m)
+s
+
+# add aesthetic of color by continent
+s = s + 
+  aes(color=continent)
+s
+
+# add title, update axes labels
+s = s + 
+  ggtitle('Health & Wealth of Nations for 2007') +
+  xlab('GDP per capita ($/year)') +
+  ylab('Life expectancy (years)')
+s
+
+# label legend
+s = s + 
+  scale_colour_discrete(name='Continent') +
+  scale_size_continuous(name='Population (M)')
+s
+
+ggsave('hans.pdf')
+```
+ 
+## Boxplots
+ 
+```{r}
+# boxplot by continent and atch color to continents, like scatterplot
+b = ggplot(g, aes(x=continent, y=lifeExp)) +
+  geom_boxplot() +
+  aes(fill=continent) +
+  theme(legend.position='none') +
+  ggtitle('Life Expectancy by Continent for 2007') +
+  xlab('Continent') +
+  ylab('Life expectancy (years)')
+b
+
+
+```
+
+## Interactive Boxplots
+```{r}
+library(plotly) # install.packages('plotly')
+
+# scatterplot (Note: key=country shows up on rollover)
+s = ggplot(g, aes(x=gdpPercap, y=lifeExp, key=country)) +
+  geom_point()
+ggplotly(s)
+
+# boxplot
+ggplotly(b)
+```
+

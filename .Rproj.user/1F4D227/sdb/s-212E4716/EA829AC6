@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"viz\"\nauthor: \"Sarah Shivers\"\ndate: \"April 16, 2016\"\noutput: html_document\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n## Scatterplot\n```{r load, results='hide', message=FALSE, warning=FALSE} \n# echo and eval are true by default\nlibrary(dplyr)\nlibrary(ggplot2) #install.packages(\"ggplot2\")\nlibrary(gapminder)\n\n# preview data\ngapminder\n\n# get range of available data\nsummary(gapminder)\n\n```\n\n```{r}\n# setup dataframe\ng = gapminder %>%\n  filter(year==2007) %>%   # most recent year \n  mutate(pop_m = pop/1e6)  # population, millions\n\n# plot scatterplot of most recent year \ns = ggplot(g, aes(x=gdpPercap, y=lifeExp)) +\n  geom_point()\ns\n\n# s + geom_smooth()\n\ns = s + \n  aes(size=pop_m)\ns\n\n# add aesthetic of color by continent\ns = s + \n  aes(color=continent)\ns\n\n# add title, update axes labels\ns = s + \n  ggtitle('Health & Wealth of Nations for 2007') +\n  xlab('GDP per capita ($/year)') +\n  ylab('Life expectancy (years)')\ns\n\n# label legend\ns = s + \n  scale_colour_discrete(name='Continent') +\n  scale_size_continuous(name='Population (M)')\ns\n\nggsave('hans.pdf')\n```\n \n## Boxplots\n \n```{r}\n# boxplot by continent and atch color to continents, like scatterplot\nb = ggplot(g, aes(x=continent, y=lifeExp)) +\n  geom_boxplot() +\n  aes(fill=continent) +\n  theme(legend.position='none') +\n  ggtitle('Life Expectancy by Continent for 2007') +\n  xlab('Continent') +\n  ylab('Life expectancy (years)')\nb\n\n\n```\n\n## Interactive Boxplots\n```{r}\nlibrary(plotly) # install.packages('plotly')\n\n# scatterplot (Note: key=country shows up on rollover)\ns = ggplot(g, aes(x=gdpPercap, y=lifeExp, key=country)) +\n  geom_point()\nggplotly(s)\n\n# boxplot\nggplotly(b)\n```\n\n",
+    "created" : 1460841020968.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1653744272",
+    "id" : "EA829AC6",
+    "lastKnownWriteTime" : 1460843781,
+    "last_content_update" : 1460843781709,
+    "path" : "~/Documents/github/my-project/viz.Rmd",
+    "project_path" : "viz.Rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

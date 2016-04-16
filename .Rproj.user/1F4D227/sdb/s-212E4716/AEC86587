@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Gapminder analysis with dplyr\"\nauthor: \"Sarah Shivers\"\ndate: \"April 16, 2016\"\noutput: html_document\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n## Load dyplr\n\n\n\n```{r}\n# install.packages(\"dplyr\") #do this only once\nlibrary(dplyr) # do this every time I restart R and need dplyr\n\n\n```\n\n## Load gapminder data\n\n\n\n```{r}\n\n#install.packages(\"gapminder\")\nlibrary(gapminder) \nstr(gapminder)\n\n```\n\n## Exploration with gapminder\n```{r}\n\n# simple filter example\nfilter(gapminder, lifeExp < 29)\n# compare with dplyr\ngapminder[gapminder$lifeExp <29]\n\n# filter\nfilter(gapminder, country == \"Rwanda\")\n# compare with dplyr\nsubset(gapminder, country == \"Rwanda\")\n\na <- filter(gapminder, country %in% c(\"Rwanda\", \"Afghanistan\"))\n\n# the pipe operator! %>% \n# command shift m to insert pipe operator %>% \n# from magrittr package\ngapminder %>% head # same as head(gapminder) \ngapminder %>% head(3) # same as head(gapminder, 3)\n\n## subset with select()\nselect(gapminder,year,lifeExp) \ngapminder %>% select(year, lifeExp) # better... \n\ngapminder %>% \n  select(year, lifeExp) %>% \n  head(4)\n\n# mean gdp of Cambodia\n# mutate adds a new column\ngapminder %>% \n  filter(continent == \"Asia\") %>% \n  select(country, year, pop, gdpPercap) %>% # or you could write select(-continent, -lifeExp) to not select certain columns\n  mutate(gdp = pop * gdpPercap) %>% \n  group_by(country) %>% \n  summarise(mean_gdp = mean(gdp)) %>% \n  ungroup() # good practice to ungroup after you group\n\n# first part same as gapminder[gapminder$country == \"Cambodia\", c(\"country\",\"year\",\"pop\",\"gdpPercap\")]\n\n\n\n\n  \n```",
+    "created" : 1460836898247.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "762904114",
+    "id" : "AEC86587",
+    "lastKnownWriteTime" : 1460839811,
+    "last_content_update" : 1460839811493,
+    "path" : "~/Documents/github/my-project/gapminder-dplyr.rmd",
+    "project_path" : "gapminder-dplyr.rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
